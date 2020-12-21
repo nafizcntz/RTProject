@@ -9,6 +9,7 @@ import java.awt.image.Kernel;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
 import java.util.Arrays;
 import javax.imageio.*;
 
@@ -136,13 +137,16 @@ public class RTProject extends Thread {
     public static void main(String[] args)throws IOException  {
         
         BufferedImage img = null; 
-        File f = null; 
-  
+        File inputFile = null; 
+        File outputFile = null; 
         // read image 
         try
         { 
-            f = new File("C:\\Users\\Nafiz\\Documents\\NetBeansProjects\\RTProject\\src\\rtproject\\input.jpg"); 
-            img = ImageIO.read(f); 
+            
+           inputFile = new File("src\\rtproject\\input.jpg");
+
+            //f = new File("input.jpg"); 
+            img = ImageIO.read(inputFile); 
         } 
         catch(IOException e) 
         { 
@@ -160,8 +164,9 @@ public class RTProject extends Thread {
        
         try
         { 
-            f = new File("C:\\Users\\Nafiz\\Documents\\NetBeansProjects\\RTProject\\src\\rtproject\\output.jpg"); 
-            ImageIO.write(img, "jpg", f); 
+            outputFile = new File("src\\rtproject\\Output2.jpg"); 
+          //  f2.createNewFile();
+            ImageIO.write(img, "jpg", outputFile); 
         } 
         catch(IOException e) 
         { 
