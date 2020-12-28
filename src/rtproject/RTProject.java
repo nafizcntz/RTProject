@@ -13,28 +13,35 @@ import java.util.Arrays;
 import javax.imageio.*;
 
 
-public class RTProject extends Thread {
+public class RTProject implements Runnable {
+    String switchh;
     BufferedImage Img;
     int startWidth;
     int startHeight;
+    String foto_yolu;
     
-    public RTProject(BufferedImage img, int StartWidth, int StartHeight) {
+    public RTProject(BufferedImage img, int StartWidth, int StartHeight, String Switchh) {
+        this.switchh = Switchh;
         this.Img = img;
         this.startWidth = StartWidth;
         this.startHeight = StartHeight;
     }
-    public void run1(){
-        grayfonk(Img, startWidth, startHeight);
+    public void run(){
+        if (switchh == "gray"){
+            grayfonk(Img, startWidth, startHeight);
+        }
+        else if(switchh == "median"){
+            //medianfonk(Img, startWidth, startHeight);
+        }
+        else if(switchh == "brightness"){
+            brightnessfonk(Img, startWidth, startHeight);
+        }
     }
-    public void run2(){
-        medianfonk(Img, startWidth, startHeight);
-    }
-    public void run3(){
-        brightnessfonk(Img, startWidth, startHeight);
-    }
+    
 
+    
     public static synchronized void  grayfonk(BufferedImage img, int StartWidth, int StartHeight) {
-
+        
         // get image's width and height 
         int width = img.getWidth()/3; 
         int height = img.getHeight()/3; 
@@ -61,20 +68,20 @@ public class RTProject extends Thread {
                 img.setRGB(x, y, p); 
             } 
         } 
+   
     }
     
-    
+    /*
     public static synchronized void medianfonk(BufferedImage img, int StartWidth, int StartHeight) {
-                                    //Input Photo File
-                                    
-        int width = img.getWidth()/3; 
-        int height = img.getHeight()/3; 
+                                            
+        int width = img.getWidth(); 
+        int height = img.getHeight(); 
         Color[] pixel=new Color[9];
         int[] R=new int[9];
         int[] B=new int[9];
         int[] G=new int[9];
-        for(int i = StartHeight; i < height+StartHeight; i++)
-            for(int j = StartWidth; j < width+StartWidth; j++)
+        for(int i = StartHeight; i < height; i++)
+            for(int j = StartWidth; j < width; j++)
             {
                pixel[0]=new Color(img.getRGB(i,j));
                pixel[1]=new Color(img.getRGB(i,j+1));
@@ -96,10 +103,11 @@ public class RTProject extends Thread {
                img.setRGB(i,j,new Color(R[4],B[4],G[4]).getRGB());
             }
        }
-    
-    
+    */
+  
   public static synchronized void brightnessfonk(BufferedImage img, int StartWidth, int StartHeight) {
-      int brightness = 300;      
+       
+      int brightness = 500;      
       int width = img.getWidth()/3; 
       int height = img.getHeight()/3;
       
@@ -131,60 +139,166 @@ public class RTProject extends Thread {
     }
   }
 }
-    
+
     
     public static void main(String[] args)throws IOException  {
-        
         BufferedImage img = null; 
-        File f = null; 
-  
-        // read image 
-        try
-        { 
-            f = new File("C:\\Users\\Nafiz\\Documents\\NetBeansProjects\\RTProject\\src\\rtproject\\input.jpg"); 
-            img = ImageIO.read(f); 
-        } 
-        catch(IOException e) 
-        { 
-            System.out.println(e); 
-        } 
-       
-       
-       RTProject a = new RTProject(img, 0, 0);
-       RTProject b = new RTProject(img, 300, 0);
-       RTProject c = new RTProject(img, 0, 600);
-       
-       a.run1();
-       b.run2();
-       c.run3();
-       
-        try
-        { 
-            f = new File("C:\\Users\\Nafiz\\Documents\\NetBeansProjects\\RTProject\\src\\rtproject\\output.jpg"); 
-            ImageIO.write(img, "jpg", f); 
-        } 
-        catch(IOException e) 
-        { 
-            System.out.println(e); 
-        } 
-   
-    
+        File f = null;
         
+        BufferedImage img1 = null;
+        File f1 = null;
+        
+        BufferedImage img2 = null;
+        File f2 = null;
+        
+        try
+        { 
+            f = new File("src\\rtproject\\input.jpg"); 
+            img = ImageIO.read(f);
+            img1 = ImageIO.read(f);
+            img2 = ImageIO.read(f);
+        } 
+        catch(IOException e) 
+        { 
+            System.out.println(e); 
+        }
+        
+        int w = img.getWidth();
+        int h = img.getHeight();
+              
+       /*-----------------------------GRAY------------------------------ */
+       
+       RTProject  gray[]= new RTProject[9];
+       
+       int j=0;
+       for(int wi=0;wi<3;wi++){
+            for(int hi=0;hi<3;hi++,j++){
+                gray[j] = new RTProject(img, (wi)*(w/3), hi*(h/3), "gray");
+            }
+        }
+       
+        Thread th[] = new Thread[9];
+        for(int i = 0; i <9; i++){
+        th[i] = new Thread(gray[i]);
+        }
+        
+        for(int i =0; i < 9; i++){
+        th[i].start();
+        }
+        
+        try{ 
+            for(int i = 0; i < 9; i++){
+            th[i].join();
+            }
+       
+       }catch(Exception e){System.out.println(e);} 
+        
+        
+        try
+        { 
+            f = new File("src\\rtproject\\gray.jpg");
+            ImageIO.write(img, "jpg", f);
+        } 
+        catch(IOException e) 
+        { 
+            System.out.println(e); 
+        }
+        
+       /*------------------------------------------------------------------------ */ 
+       
+       
+       /*-----------------------------MEDİAN------------------------------ */
+       //RTProject median = new RTProject(foto_yolu,img, 1, 1);
+       /*
+       RTProject  median[]= new RTProject[9];
+       
+       j=0;
+       for(int wi=0;wi<3;wi++){
+            for(int hi=0;hi<3;hi++,j++){
+                median[j] = new RTProject(img2, (wi)*(w/3), hi*(h/3), "median");
+            }
+        }
+       
+        Thread th2[] = new Thread[9];
+        for(int i = 0; i <9; i++){
+        th2[i] = new Thread(median[i]);
+        }
+        
+        for(int i =0; i < 9; i++){
+        th2[i].start();
+        }
+        
+        try{ 
+            for(int i = 0; i < 9; i++){
+            th2[i].join();
+            }
+       
+       }catch(Exception e){System.out.println(e);} 
+        
+        
+        try
+        { 
+            f2 = new File("src\\rtproject\\median.jpg");
+            ImageIO.write(img2, "jpg", f2);
+        } 
+        catch(IOException e) 
+        { 
+            System.out.println(e); 
+        }
+       */
+       /*------------------------------------------------------------------------*/
+       
   
-      
+       /*-----------------------------BRIGHTNESS------------------------------ */
        
        
+       RTProject  brightness[]= new RTProject[9];
+       
+       j=0;
+       for(int wi=0;wi<3;wi++){
+            for(int hi=0;hi<3;hi++,j++){
+                brightness[j] = new RTProject(img1, (wi)*(w/3), hi*(h/3), "brightness");
+            }
+        }
        
        
+       Thread th1[] = new Thread[9];
+       for(int i = 0; i <9; i++){
+            th1[i] = new Thread(brightness[i]);
+       }
+ 
        
+       for(int i =0; i < 9; i++){
+            th1[i].start();
+       }
        
+       try{      
+            for(int i = 0; i < 9; i++){
+                th1[i].join();
+            }
+       }catch(Exception e){System.out.println(e);}  
+
+       /*
        
+       RTProject brightness = new RTProject(img1, 0, 0, "brightness");
        
-       
-       
-       
-       
-	
+       Thread th1 = new Thread(brightness);
+       th1.start();
+       try{
+            th1.join();
+            
+       }catch(Exception e){System.out.println(e);}
+       */
+       try
+        { 
+            f1 = new File("src\\rtproject\\brightness.jpg");
+            ImageIO.write(img1, "jpg", f1);
+        } 
+        catch(IOException e) 
+        { 
+            System.out.println(e); 
+        } 
+    /*------------------------------------------------------------------------ */
     }
     
 }
