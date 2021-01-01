@@ -8,6 +8,7 @@ import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 import java.io.*;
 import java.util.Arrays;
 import javax.imageio.*;
@@ -19,6 +20,7 @@ public class RTProject implements Runnable {
     int startWidth;
     int startHeight;
     String foto_yolu;
+    
     
     public RTProject(BufferedImage img, int StartWidth, int StartHeight, String Switchh) {
         this.switchh = Switchh;
@@ -35,6 +37,9 @@ public class RTProject implements Runnable {
         }
         else if(switchh == "brightness"){
             brightnessfonk(Img, startWidth, startHeight);
+        }
+        else if(switchh == "blur"){
+            blurfonk(Img, startWidth, startHeight);
         }
     }
     
@@ -65,11 +70,12 @@ public class RTProject implements Runnable {
                 // replace RGB value with avg 
                 p = (a<<24) | (avg<<16) | (avg<<8) | avg; 
   
-                img.setRGB(x, y, p); 
-            } 
-        } 
-   
+                img.setRGB(x, y, p);
+                
+                
+        }
     }
+}
     
     /*
     public static synchronized void medianfonk(BufferedImage img, int StartWidth, int StartHeight) {
@@ -140,6 +146,76 @@ public class RTProject implements Runnable {
   }
 }
 
+  public static void blurfonk(BufferedImage img, int StartWidth, int StartHeight){
+        
+        int width = img.getWidth()/3; 
+        int height = img.getHeight()/3;
+        
+        int rgb_buffer[][][] = null;
+        rgb_buffer = new int[3][img.getHeight()*3][img.getWidth()*3];
+        
+        for (int i = 0; i<20;i++){
+        for(int row = 0; row < height*3; row++){
+            for(int col = 0; col < width*3; col++){
+                Color c = new Color(img.getRGB(col, row));
+                rgb_buffer[0][row][col] = c.getRed();
+                rgb_buffer[1][row][col] = c.getGreen();
+                rgb_buffer[2][row][col] = c.getBlue();
+            }
+        }
+        
+        for(int row = StartHeight; row < height+StartHeight; row++){
+            for(int col = StartWidth; col < width+StartWidth; col++){
+                int r = 0;
+                int g = 0;
+                int b = 0;
+                
+                //İlk girişte outofbonds hatası alıyoruz. Onu çözemedik
+                 r = rgb_buffer[0][row][col]+
+                        rgb_buffer[0][row][col+1]+
+                        rgb_buffer[0][row][col+2]+
+                        
+                        rgb_buffer[0][row+1][col]+
+                        rgb_buffer[0][row+1][col+1]+
+                        rgb_buffer[0][row+1][col+2]+
+                        
+                        rgb_buffer[0][row+2][col]+
+                        rgb_buffer[0][row+2][col+1]+
+                        rgb_buffer[0][row+2][col+2];
+                
+                 g = rgb_buffer[1][row][col]+
+                        rgb_buffer[1][row][col+1]+
+                        rgb_buffer[1][row][col+2]+
+                        
+                        rgb_buffer[1][row+1][col]+
+                        rgb_buffer[1][row+1][col+1]+
+                        rgb_buffer[1][row+1][col+2]+
+                        
+                        rgb_buffer[1][row+2][col]+
+                        rgb_buffer[1][row+2][col+1]+
+                        rgb_buffer[1][row+2][col+2];
+                
+                 b = rgb_buffer[2][row][col]+
+                        rgb_buffer[2][row][col+1]+
+                        rgb_buffer[2][row][col+2]+
+                        
+                        rgb_buffer[2][row+1][col]+
+                        rgb_buffer[2][row+1][col+1]+
+                        rgb_buffer[2][row+1][col+2]+
+                        
+                        rgb_buffer[2][row+2][col]+
+                        rgb_buffer[2][row+2][col+1]+
+                        rgb_buffer[2][row+2][col+2];
+                
+                
+                Color c = new Color(r/9, g/9, b/9);
+                img.setRGB(col, row, c.getRGB());
+            }
+        }
+        
+     }      
+    
+  }
     
     public static void main(String[] args)throws IOException  {
         BufferedImage img = null; 
@@ -151,12 +227,16 @@ public class RTProject implements Runnable {
         BufferedImage img2 = null;
         File f2 = null;
         
+        BufferedImage img3 = null;
+        File f3 = null;
+        
         try
         { 
             f = new File("src\\rtproject\\input.jpg"); 
             img = ImageIO.read(f);
             img1 = ImageIO.read(f);
             img2 = ImageIO.read(f);
+            img3 = ImageIO.read(f);
         } 
         catch(IOException e) 
         { 
@@ -165,25 +245,33 @@ public class RTProject implements Runnable {
         
         int w = img.getWidth();
         int h = img.getHeight();
+        
+ 
+        
+        
+        
               
        /*-----------------------------GRAY------------------------------ */
        
-       RTProject  gray[]= new RTProject[9];
+       RTProject gray[]= new RTProject[9];
        
        int j=0;
        for(int wi=0;wi<3;wi++){
             for(int hi=0;hi<3;hi++,j++){
                 gray[j] = new RTProject(img, (wi)*(w/3), hi*(h/3), "gray");
+                
             }
         }
+        
        
-        Thread th[] = new Thread[9];
+       Thread th[] = new Thread[9];
         for(int i = 0; i <9; i++){
-        th[i] = new Thread(gray[i]);
+            th[i] = new Thread(gray[i]);
         }
         
-        for(int i =0; i < 9; i++){
-        th[i].start();
+        
+        for(int i = 0; i < 9; i++){
+            th[i].start();
         }
         
         try{ 
@@ -203,7 +291,20 @@ public class RTProject implements Runnable {
         { 
             System.out.println(e); 
         }
-        
+        /*
+        int countloop=0;  
+ 
+           for (int x = 0; x <img.getWidth()/3; x++) {
+ 
+                    for (int y = 0; y < img.getHeight()/3; y++) {
+ 
+                         Color c = new Color(img.getRGB(x, y));
+ 
+                          System.out.println(""+c.getRed()+","+c.getGreen()+","+c.getBlue()+"   countloop="+countloop++);
+                          
+                    }
+            }*/
+    
        /*------------------------------------------------------------------------ */ 
        
        
@@ -299,6 +400,50 @@ public class RTProject implements Runnable {
             System.out.println(e); 
         } 
     /*------------------------------------------------------------------------ */
+        
+    /*---------------------------------BLUR----------------------------------- */
+        RTProject blur[]= new RTProject[9];
+       
+       j=0;
+       for(int wi=0;wi<3;wi++){
+            for(int hi=0;hi<3;hi++,j++){
+                blur[j] = new RTProject(img3, ((wi)*(w/3)), (hi*(h/3)), "blur");
+                
+            }
+        }
+        
+       
+       Thread th3[] = new Thread[9];
+        for(int i = 0; i <9; i++){
+            th3[i] = new Thread(blur[i]);
+        }
+        
+        
+        for(int i = 0; i < 9; i++){
+            th3[i].start();
+        }
+        
+        try{ 
+            for(int i = 0; i < 9; i++){
+            th3[i].join();
+            }
+       
+       }catch(Exception e){System.out.println(e);} 
+        
+        
+        try
+        { 
+            f3 = new File("src\\rtproject\\blur.jpg");
+            ImageIO.write(img3, "jpg", f3);
+        } 
+        catch(IOException e) 
+        { 
+            System.out.println(e); 
+        }
+ 
+        }
+
+    
     }
     
-}
+
