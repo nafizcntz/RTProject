@@ -13,42 +13,44 @@ public class RTProject implements Runnable {
     int startWidth;
     int startHeight;
     String foto_yolu;
+    int bolme;
     
     
-    public RTProject(BufferedImage img, int StartWidth, int StartHeight, String Switchh) {
+    public RTProject(BufferedImage img, int StartWidth, int StartHeight, String Switchh, int Bolme) {
         this.switchh = Switchh;
         this.Img = img;
         this.startWidth = StartWidth;
         this.startHeight = StartHeight;
+        this.bolme = Bolme;
     }
     public void run(){
         if (switchh == "gray"){
-            grayfonk(Img, startWidth, startHeight);
+            grayfonk(Img, startWidth, startHeight, bolme);
         }
         else if(switchh == "median"){
-            medianfonk(Img, startWidth, startHeight);
+            medianfonk(Img, startWidth, startHeight, bolme);
         }
         else if(switchh == "brightness"){
-            brightnessfonk(Img, startWidth, startHeight);
+            brightnessfonk(Img, startWidth, startHeight, bolme);
         }
         else if(switchh == "blur"){
-            blurfonk(Img, startWidth, startHeight);
+            //blurfonk(Img, startWidth, startHeight, bolme);
         }
         else if(switchh == "sepia"){
-            sepiafonk(Img, startWidth, startHeight);
+            sepiafonk(Img, startWidth, startHeight, bolme);
         }
         else if(switchh == "invert"){
-            invertfonk(Img, startWidth, startHeight);
+            invertfonk(Img, startWidth, startHeight, bolme);
         }
     }
     
 
     
-    public static synchronized void  grayfonk(BufferedImage img, int StartWidth, int StartHeight) {
+    public static synchronized void  grayfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
         
         // get image's width and height 
-        int width = img.getWidth()/3; 
-        int height = img.getHeight()/3; 
+        int width = img.getWidth()/bolme; 
+        int height = img.getHeight()/bolme; 
   
         // convert to greyscale 
         for (int y = StartHeight; y < height+StartHeight; y++) 
@@ -77,18 +79,18 @@ public class RTProject implements Runnable {
 }
     
     
-    public static synchronized void medianfonk(BufferedImage img, int StartWidth, int StartHeight) {
+    public static synchronized void medianfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
                                             
-        int width = img.getWidth()/3; 
-        int height = img.getHeight()/3; 
+        int width = img.getWidth()/bolme; 
+        int height = img.getHeight()/bolme; 
         Color[] pixel=new Color[9];
         int[] R = new int[9];
         int[] B = new int[9];
         int[] G = new int[9];
-        for(int i = StartWidth+1; i < width + StartWidth-1 ; i++)
-            for(int j = StartHeight+1; j < height + StartHeight-1; j++)
+        for(int i = 1+StartWidth; i < width+StartWidth-1 ; i++)
+            for(int j = 1+StartHeight; j < height+StartHeight-1; j++)
             {
-               
+               /*
                pixel[0]=new Color(img.getRGB(i-1,j-1));
                pixel[1]=new Color(img.getRGB(i-1,j));
                pixel[2]=new Color(img.getRGB(i-1,j+1));
@@ -98,17 +100,29 @@ public class RTProject implements Runnable {
                pixel[6]=new Color(img.getRGB(i+1,j-1));
                pixel[7]=new Color(img.getRGB(i,j-1));
                pixel[8]=new Color(img.getRGB(i,j));
-                /*
+                */
+                 /*
+                
                pixel[0]=new Color(img.getRGB(i,j));
-               pixel[1]=new Color(img.getRGB(i,j+1));
-               pixel[2]=new Color(img.getRGB(i,j+2));
-               pixel[3]=new Color(img.getRGB(i+1,j+2));
-               pixel[4]=new Color(img.getRGB(i+2,j+2));
-               pixel[5]=new Color(img.getRGB(i+2,j+1));
-               pixel[6]=new Color(img.getRGB(i+2,j));
+               pixel[1]=new Color(img.getRGB(i,j));
+               pixel[2]=new Color(img.getRGB(i,j+1));
+               pixel[3]=new Color(img.getRGB(i+1,j+1));
+               pixel[4]=new Color(img.getRGB(i+1,j+1));
+               pixel[5]=new Color(img.getRGB(i+1,j+1));
+               pixel[6]=new Color(img.getRGB(i+1,j));
                pixel[7]=new Color(img.getRGB(i+1,j));
                pixel[8]=new Color(img.getRGB(i+1,j+1));
                */
+               pixel[0]=new Color(img.getRGB(i-1,j));
+               pixel[1]=new Color(img.getRGB(i,j));
+               pixel[2]=new Color(img.getRGB(i,j+1));
+               pixel[3]=new Color(img.getRGB(i+1,j+1));
+               pixel[4]=new Color(img.getRGB(i-1,j-1));
+               pixel[5]=new Color(img.getRGB(i+1,j-1));
+               pixel[6]=new Color(img.getRGB(i+1,j));
+               pixel[7]=new Color(img.getRGB(i,j+1));
+               pixel[8]=new Color(img.getRGB(i-1,j+1));
+               
                for(int k=0;k<9;k++){
                    R[k]=pixel[k].getRed();
                    B[k]=pixel[k].getBlue();
@@ -120,13 +134,45 @@ public class RTProject implements Runnable {
                img.setRGB(i,j,new Color(R[4],B[4],G[4]).getRGB());
             }
        }
-    
+    /*
+        public static synchronized void medianfonkKenar(BufferedImage img, int StartWidth, int StartHeight,int bolme) {
+        Color[] pixel=new Color[9];
+        int[] R = new int[9];
+        int[] B = new int[9];
+        int[] G = new int[9];
+        for(int i = 1; i < img.getWidth()-1 ; i++)
+            for(int j = 1; j <img.getHeight()-1; j++)
+            {
+      
+               pixel[0]=new Color(img.getRGB(i-1,j));
+               pixel[1]=new Color(img.getRGB(i,j));
+               pixel[2]=new Color(img.getRGB(i,j+1));
+               pixel[3]=new Color(img.getRGB(i+1,j+1));
+               pixel[4]=new Color(img.getRGB(i-1,j-1));
+               pixel[5]=new Color(img.getRGB(i+1,j-1));
+               pixel[6]=new Color(img.getRGB(i+1,j));
+               pixel[7]=new Color(img.getRGB(i,j+1));
+               pixel[8]=new Color(img.getRGB(i-1,j+1));
+               
+               for(int k=0;k<9;k++){
+                   R[k]=pixel[k].getRed();
+                   B[k]=pixel[k].getBlue();
+                   G[k]=pixel[k].getGreen();
+               }
+               Arrays.sort(R);
+               Arrays.sort(G);
+               Arrays.sort(B);
+               img.setRGB(i,j,new Color(R[4],B[4],G[4]).getRGB());
+            }
+        
+        }
+  */
   
-  public static synchronized void brightnessfonk(BufferedImage img, int StartWidth, int StartHeight) {
+  public static synchronized void brightnessfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
        
       int brightness = 500;      
-      int width = img.getWidth()/3; 
-      int height = img.getHeight()/3;
+      int width = img.getWidth()/bolme; 
+      int height = img.getHeight()/bolme;
       
       for (int y = StartHeight; y < height+StartHeight; y++) 
         { 
@@ -156,7 +202,7 @@ public class RTProject implements Runnable {
     }
   }
 }
-
+/*
   public static void blurfonk(BufferedImage img, int StartWidth, int StartHeight){
         
         int width = img.getWidth()/3; 
@@ -226,17 +272,16 @@ public class RTProject implements Runnable {
         
      }      
     
-  }
+  }*/
   
   
-  public static void sepiafonk(BufferedImage img, int StartWidth, int StartHeight) {
-      int w = img.getWidth();
-      int h = img.getHeight();
+  public static void sepiafonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
+      int w = img.getWidth()/bolme;
+      int h = img.getHeight()/bolme;
         
         
-        
-        for (int row = 0; row <w; row++) {
-            for (int col = 0; col < h; col++) {
+        for (int row = StartWidth; row <w+StartWidth; row++) {
+            for (int col = StartHeight; col < h+StartHeight; col++) {
                 try{
                 int p = img.getRGB(row,col); 
                 int a = (p>>24)&0xff; 
@@ -273,10 +318,14 @@ public class RTProject implements Runnable {
             }
         }
   }
-  public static void invertfonk(BufferedImage img, int StartWidth, int StartHeight) {
-       for (int i = 0; i < img.getHeight(); i++)
+  public static void invertfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
+       
+      int w = img.getWidth()/bolme;
+      int h = img.getHeight()/bolme;
+      
+      for (int i = StartHeight; i < h+StartHeight; i++)
         {
-            for (int j = 0; j < img.getWidth(); j++)
+            for (int j = StartWidth; j < w+StartWidth; j++)
             {
                 
                 
@@ -303,7 +352,7 @@ public class RTProject implements Runnable {
         }
   }
   
-  public static String Filtre(String Adres, String filtre){
+  public static String Filtre(String Adres, String filtre, int bolme){
       BufferedImage img = null; 
       File f = null;
       
@@ -321,29 +370,29 @@ public class RTProject implements Runnable {
         int w = img.getWidth();
         int h = img.getHeight();
         
-        RTProject Array[]= new RTProject[9];
+        RTProject Array[]= new RTProject[bolme*bolme];
        
        int j=0;
-       for(int wi=0;wi<3;wi++){
-            for(int hi=0;hi<3;hi++,j++){
-                Array[j] = new RTProject(img, (wi)*(w/3), hi*(h/3), filtre);
+       for(int wi=0;wi<bolme;wi++){
+            for(int hi=0;hi<bolme;hi++,j++){
+                Array[j] = new RTProject(img, (wi)*(w/bolme), hi*(h/bolme), filtre, bolme);
                 
             }
         }
         
        
-       Thread th[] = new Thread[9];
-        for(int i = 0; i <9; i++){
+       Thread th[] = new Thread[bolme*bolme];
+        for(int i = 0; i <bolme*bolme; i++){
             th[i] = new Thread(Array[i]);
         }
         
         
-        for(int i = 0; i < 9; i++){
+        for(int i = 0; i < bolme*bolme; i++){
             th[i].start();
         }
         
         try{ 
-            for(int i = 0; i < 9; i++){
+            for(int i = 0; i < bolme*bolme; i++){
             th[i].join();
             }
        
