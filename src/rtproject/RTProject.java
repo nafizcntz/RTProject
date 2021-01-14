@@ -29,6 +29,7 @@ public class RTProject implements Runnable {
         }
         else if(switchh == "median"){
             medianfonk(Img, startWidth, startHeight, bolme);
+            //medianfonkKenar(Img, startWidth, startHeight, bolme);
         }
         else if(switchh == "brightness"){
             brightnessfonk(Img, startWidth, startHeight, bolme);
@@ -80,7 +81,7 @@ public class RTProject implements Runnable {
     
     
     public static synchronized void medianfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
-                                            
+   
         int width = img.getWidth()/bolme; 
         int height = img.getHeight()/bolme; 
         Color[] pixel=new Color[9];
@@ -133,26 +134,29 @@ public class RTProject implements Runnable {
                Arrays.sort(B);
                img.setRGB(i,j,new Color(R[4],B[4],G[4]).getRGB());
             }
+              //medianfonkKenar(img,StartWidth, StartHeight, bolme );   
        }
-    /*
+
         public static synchronized void medianfonkKenar(BufferedImage img, int StartWidth, int StartHeight,int bolme) {
+        //int InitialMiddleCorVertical=(img.getHeight()/bolme)+1;
+
         Color[] pixel=new Color[9];
         int[] R = new int[9];
         int[] B = new int[9];
         int[] G = new int[9];
-        for(int i = 1; i < img.getWidth()-1 ; i++)
-            for(int j = 1; j <img.getHeight()-1; j++)
+        int temp=img.getWidth()/bolme;
+        for(int i=img.getWidth()/bolme-4; i<=(img.getWidth()/bolme)+4; i++)
+            for(int j = 1; j <(img.getHeight()/bolme)-1; j++)
             {
-      
                pixel[0]=new Color(img.getRGB(i-1,j));
                pixel[1]=new Color(img.getRGB(i,j));
-               pixel[2]=new Color(img.getRGB(i,j+1));
-               pixel[3]=new Color(img.getRGB(i+1,j+1));
-               pixel[4]=new Color(img.getRGB(i-1,j-1));
-               pixel[5]=new Color(img.getRGB(i+1,j-1));
+               pixel[2]=new Color(img.getRGB(i,j));
+               pixel[3]=new Color(img.getRGB(i+1,j));
+               pixel[4]=new Color(img.getRGB(i-1,j));
+               pixel[5]=new Color(img.getRGB(i+1,j));
                pixel[6]=new Color(img.getRGB(i+1,j));
-               pixel[7]=new Color(img.getRGB(i,j+1));
-               pixel[8]=new Color(img.getRGB(i-1,j+1));
+               pixel[7]=new Color(img.getRGB(i,j));
+               pixel[8]=new Color(img.getRGB(i-1,j));
                
                for(int k=0;k<9;k++){
                    R[k]=pixel[k].getRed();
@@ -166,7 +170,7 @@ public class RTProject implements Runnable {
             }
         
         }
-  */
+  
   
   public static synchronized void brightnessfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
        
@@ -397,6 +401,7 @@ public class RTProject implements Runnable {
             }
        
        }catch(Exception e){System.out.println(e);} 
+        
         
         String imgadres = "src\\rtproject\\"+filtre+".jpg";
         try
