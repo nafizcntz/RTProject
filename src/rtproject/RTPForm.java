@@ -148,7 +148,6 @@ public class RTPForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser Chooser = new JFileChooser();
-        Chooser.setCurrentDirectory(new File("src\\rtproject"));
         int result = Chooser.showDialog(this,"Open/Save");
         if(result == JFileChooser.APPROVE_OPTION)
         {   

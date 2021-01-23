@@ -73,7 +73,7 @@ public class RTProject implements Runnable {
                 p = (a<<24) | (avg<<16) | (avg<<8) | avg; 
   
                 img.setRGB(x, y, p);
-                
+ 
                 
         }
     }
@@ -81,7 +81,6 @@ public class RTProject implements Runnable {
     
     
     public static synchronized void medianfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
-   
         int width = img.getWidth()/bolme; 
         int height = img.getHeight()/bolme; 
         Color[] pixel=new Color[9];
@@ -101,8 +100,8 @@ public class RTProject implements Runnable {
                pixel[6]=new Color(img.getRGB(i+1,j-1));
                pixel[7]=new Color(img.getRGB(i,j-1));
                pixel[8]=new Color(img.getRGB(i,j));
-                */
-                 /*
+                
+                
                 
                pixel[0]=new Color(img.getRGB(i,j));
                pixel[1]=new Color(img.getRGB(i,j));
@@ -124,6 +123,10 @@ public class RTProject implements Runnable {
                pixel[7]=new Color(img.getRGB(i,j+1));
                pixel[8]=new Color(img.getRGB(i-1,j+1));
                
+               
+               
+               
+               
                for(int k=0;k<9;k++){
                    R[k]=pixel[k].getRed();
                    B[k]=pixel[k].getBlue();
@@ -134,7 +137,7 @@ public class RTProject implements Runnable {
                Arrays.sort(B);
                img.setRGB(i,j,new Color(R[4],B[4],G[4]).getRGB());
             }
-              //medianfonkKenar(img,StartWidth, StartHeight, bolme );   
+              //medianfonkKenar(img,StartWidth, StartHeight, bolme );  
        }
 
         public static synchronized void medianfonkKenar(BufferedImage img, int StartWidth, int StartHeight,int bolme) {
@@ -403,7 +406,7 @@ public class RTProject implements Runnable {
        }catch(Exception e){System.out.println(e);} 
         
         
-        String imgadres = "src\\rtproject\\"+filtre+".jpg";
+        String imgadres = filtre+".jpg";
         try
         { 
             f = new File(imgadres);
@@ -419,6 +422,11 @@ public class RTProject implements Runnable {
   }
         
     public static void main(String[] args)throws IOException  {
+        
+        RTPForm yeni = new RTPForm();
+        yeni.show();
+        
+        
         /*
         BufferedImage img = null; 
         File f = null;
