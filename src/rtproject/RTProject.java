@@ -28,14 +28,15 @@ public class RTProject implements Runnable {
             grayfonk(Img, startWidth, startHeight, bolme);
         }
         else if(switchh == "median"){
+            for(int i=0; i<5; i++){
             medianfonk(Img, startWidth, startHeight, bolme);
-            //medianfonkKenar(Img, startWidth, startHeight, bolme);
+            }
         }
         else if(switchh == "brightness"){
             brightnessfonk(Img, startWidth, startHeight, bolme);
         }
         else if(switchh == "blur"){
-            //blurfonk(Img, startWidth, startHeight, bolme);
+            blurfonk(Img, startWidth, startHeight);
         }
         else if(switchh == "sepia"){
             sepiafonk(Img, startWidth, startHeight, bolme);
@@ -53,7 +54,6 @@ public class RTProject implements Runnable {
         int width = img.getWidth()/bolme; 
         int height = img.getHeight()/bolme; 
   
-        // convert to greyscale 
         for (int y = StartHeight; y < height+StartHeight; y++) 
         { 
             for (int x = StartWidth; x < width+StartWidth; x++) 
@@ -82,6 +82,7 @@ public class RTProject implements Runnable {
     
     public static synchronized void medianfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
         
+<<<<<<< Updated upstream
         
        
         int width = img.getWidth()/bolme; 
@@ -144,41 +145,145 @@ public class RTProject implements Runnable {
                img.setRGB(i,j,new Color(R[4],B[4],G[4]).getRGB());
             }
               //medianfonkKenar(img,StartWidth, StartHeight, bolme );  
+=======
+        int width = img.getWidth()/bolme; 
+        int height = img.getHeight()/bolme; 
+        int[] p = new int[81];
+        int r=0;
+        int g=0;
+        int b=0;
+        for(int i = StartWidth+1; i < width+StartWidth-1; i++)
+            for(int j = StartHeight+1; j < height+StartHeight-1; j++)
+            {
+
+               p[0] = img.getRGB(i-1,j-1);
+               p[1] = img.getRGB(i,j-1);
+               p[2] = img.getRGB(i+1,j-1);
+               p[3] = img.getRGB(i-1,j);
+               p[4] = img.getRGB(i,j);
+               p[5] = img.getRGB(i+1,j);
+               p[6] = img.getRGB(i-1,j+1);
+               p[7] = img.getRGB(i,j+1);
+               p[8] = img.getRGB(i+1,j+1);
+ 
+                
+/*
+    for(int k=0; k<4; k++){
+	for(int z=0; z<4; z++){
+               p[k] = img.getRGB(i-1-k,j-1-z);
+               p[k+z] = img.getRGB(i-k,j-1-z);
+               p[k+z] = img.getRGB(i+1-k,j-1-z);
+               p[k+z] = img.getRGB(i-1-k,j-z);
+               p[k+z] = img.getRGB(i+k,j+z);
+               p[k+z] = img.getRGB(i+1+k,j+z);
+               p[k+z] = img.getRGB(i-1+k,j+1+z);
+               p[k+z] = img.getRGB(i+k,j+1+z);
+               p[k+z] = img.getRGB(i+1+k,j+1+z);
+        }
+    }
+*/                          
+               for(int x=0; x<9; x++){
+                    int a = (p[x]>>24)&0xff; 
+                    
+                   // Get the individual colors
+                    r = (p[x] >> 16) & 0xff;
+                    g = (p[x] >> 8) & 0xff;
+                    b = p[x]&0xff;
+                   // Check the boundaries
+                   r = Math.min(Math.max(0, r), 255);
+                   g = Math.min(Math.max(0, g), 255);
+                   b = Math.min(Math.max(0, b), 255);
+                   // Return the result
+                p[x] = (a<<24) | (r<<16) | (g<<8) | b;
+                }
+                Arrays.sort(p);
+                img.setRGB(i,j, p[4]); 
+            
+        }
+        //  Calling a function to apply the filter vertically and horizontally on the surrounding parts of every small filter
+              medianfonkKenar(img,StartWidth, StartHeight, bolme);
+             // medianfonkKenar(img,StartWidth, StartHeight, bolme);
+             
+>>>>>>> Stashed changes
        }
 
         public static synchronized void medianfonkKenar(BufferedImage img, int StartWidth, int StartHeight,int bolme) {
-        //int InitialMiddleCorVertical=(img.getHeight()/bolme)+1;
-
-        Color[] pixel=new Color[9];
-        int[] R = new int[9];
-        int[] B = new int[9];
-        int[] G = new int[9];
-        int temp=img.getWidth()/bolme;
-        for(int i=img.getWidth()/bolme-4; i<=(img.getWidth()/bolme)+4; i++)
-            for(int j = 1; j <(img.getHeight()/bolme)-1; j++)
+        int width = img.getWidth()/bolme; 
+        int height = img.getHeight()/bolme;
+        int r=0;
+        int g=0;
+        int b=0;
+        int[] p = new int[9];
+    //  function to go over the parts vertically
+    
+    try{
+        for(int i = StartWidth+width-10; i < width+StartWidth+10; i++)
+            for(int j = 1; j < img.getHeight()-1; j++)
             {
-               pixel[0]=new Color(img.getRGB(i-1,j));
-               pixel[1]=new Color(img.getRGB(i,j));
-               pixel[2]=new Color(img.getRGB(i,j));
-               pixel[3]=new Color(img.getRGB(i+1,j));
-               pixel[4]=new Color(img.getRGB(i-1,j));
-               pixel[5]=new Color(img.getRGB(i+1,j));
-               pixel[6]=new Color(img.getRGB(i+1,j));
-               pixel[7]=new Color(img.getRGB(i,j));
-               pixel[8]=new Color(img.getRGB(i-1,j));
+
+               p[0] = img.getRGB(i-1,j-1);
+               p[1] = img.getRGB(i,j-1);
+               p[2] = img.getRGB(i+1,j-1);
+               p[3] = img.getRGB(i-1,j);
+               p[4] = img.getRGB(i,j);
+               p[5] = img.getRGB(i+1,j);
+               p[6] = img.getRGB(i-1,j+1);
+               p[7] = img.getRGB(i,j+1);
+               p[8] = img.getRGB(i+1,j+1);
+             
                
-               for(int k=0;k<9;k++){
-                   R[k]=pixel[k].getRed();
-                   B[k]=pixel[k].getBlue();
-                   G[k]=pixel[k].getGreen();
-               }
-               Arrays.sort(R);
-               Arrays.sort(G);
-               Arrays.sort(B);
-               img.setRGB(i,j,new Color(R[4],B[4],G[4]).getRGB());
-            }
+               for(int k=0; k<9; k++){
+                    int a = (p[k]>>24)&0xff; 
+                   // Get the individual colors
+                    r = (p[k] >> 16) & 0xff;
+                    g = (p[k] >> 8) & 0xff;
+                    b = p[k]&0xff;
+                   // Check the boundaries
+                   r = Math.min(Math.max(0, r), 255);
+                   g = Math.min(Math.max(0, g), 255);
+                   b = Math.min(Math.max(0, b), 255);
+                    // Return the result
+                   p[k] = (a<<24) | (r<<16) | (g<<8) | b;
+                    }
+                Arrays.sort(p);
+                img.setRGB(i,j, p[4]); 
+                }
+    
+    
+        //  function to go over the parts horizantilly
+         for(int i = 1; i < img.getWidth()-1; i++)
+            for(int j = StartHeight+height-10; j < StartHeight+height+10; j++)
+            {
+               p[0] = img.getRGB(i-1,j-1);
+               p[1] = img.getRGB(i,j-1);
+               p[2] = img.getRGB(i+1,j-1);
+               p[3] = img.getRGB(i-1,j);
+               p[4] = img.getRGB(i,j);
+               p[5] = img.getRGB(i+1,j);
+               p[6] = img.getRGB(i-1,j+1);
+               p[7] = img.getRGB(i,j+1);
+               p[8] = img.getRGB(i+1,j+1);
+             
+               for(int k=0; k<9; k++){
+                    int a = (p[k]>>24)&0xff; 
+                   // Get the individual colors
+                    r = (p[k] >> 16) & 0xff;
+                    g = (p[k] >> 8) & 0xff;
+                    b = p[k]&0xff;
+                   // Check the boundaries
+                   r = Math.min(Math.max(0, r), 255);
+                   g = Math.min(Math.max(0, g), 255);
+                   b = Math.min(Math.max(0, b), 255);
+                   // Return the result
+                p[k] = (a<<24) | (r<<16) | (g<<8) | b;
+                    }
+                Arrays.sort(p);
+                img.setRGB(i,j, p[4]); 
+                }
         
-        }
+    }catch(Exception e){
+    }
+}
   
   
   public static synchronized void brightnessfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
@@ -215,12 +320,9 @@ public class RTProject implements Runnable {
     }
   }
 }
-/*
+
   public static void blurfonk(BufferedImage img, int StartWidth, int StartHeight){
-        
-        int width = img.getWidth()/3; 
-        int height = img.getHeight()/3;
-        
+        /*
         int rgb_buffer[][][] = null;
         rgb_buffer = new int[3][img.getHeight()*3][img.getWidth()*3];
         
@@ -284,8 +386,8 @@ public class RTProject implements Runnable {
         }
         
      }      
-    
-  }*/
+    */
+  }
   
   
   public static void sepiafonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
