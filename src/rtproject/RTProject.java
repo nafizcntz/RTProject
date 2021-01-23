@@ -75,44 +75,49 @@ public class RTProject implements Runnable {
                 img.setRGB(x, y, p);
  
                 
+            }
         }
     }
-}
     
     
     public static synchronized void medianfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
+        
+        
+       
         int width = img.getWidth()/bolme; 
         int height = img.getHeight()/bolme; 
         Color[] pixel=new Color[9];
         int[] R = new int[9];
         int[] B = new int[9];
         int[] G = new int[9];
-        for(int i = 1+StartWidth; i < width+StartWidth-1 ; i++)
-            for(int j = 1+StartHeight; j < height+StartHeight-1; j++)
+        for(int i = StartWidth; i < width+StartWidth-3 ; i++)
+            for(int j = StartHeight; j < height+StartHeight-3; j++)
             {
                /*
-               pixel[0]=new Color(img.getRGB(i-1,j-1));
+               pixel[0]=new Color(img.getRGB(i-1,j-1));               
                pixel[1]=new Color(img.getRGB(i-1,j));
-               pixel[2]=new Color(img.getRGB(i-1,j+1));
-               pixel[3]=new Color(img.getRGB(i,j+1));
-               pixel[4]=new Color(img.getRGB(i+1,j+1));
-               pixel[5]=new Color(img.getRGB(i+1,j));
+               pixel[2]=new Color(img.getRGB(i-1,j+1));               
+               pixel[3]=new Color(img.getRGB(i,j+1));               
+               pixel[4]=new Color(img.getRGB(i+1,j+1));                
+               pixel[5]=new Color(img.getRGB(i+1,j));              
                pixel[6]=new Color(img.getRGB(i+1,j-1));
                pixel[7]=new Color(img.getRGB(i,j-1));
                pixel[8]=new Color(img.getRGB(i,j));
-                
-                
-                
-               pixel[0]=new Color(img.getRGB(i,j));
-               pixel[1]=new Color(img.getRGB(i,j));
-               pixel[2]=new Color(img.getRGB(i,j+1));
-               pixel[3]=new Color(img.getRGB(i+1,j+1));
-               pixel[4]=new Color(img.getRGB(i+1,j+1));
-               pixel[5]=new Color(img.getRGB(i+1,j+1));
-               pixel[6]=new Color(img.getRGB(i+1,j));
-               pixel[7]=new Color(img.getRGB(i+1,j));
+                        */
+      
+               pixel[0]=new Color(img.getRGB(i,j));                
+               pixel[1]=new Color(img.getRGB(i,j+1));                
+               pixel[2]=new Color(img.getRGB(i,j+2));                
+               pixel[3]=new Color(img.getRGB(i+1,j+2));       
+               
+               pixel[4]=new Color(img.getRGB(i+2,j+2));
+               
+               pixel[5]=new Color(img.getRGB(i+2,j+1));                
+               pixel[6]=new Color(img.getRGB(i+2,j));                
+               pixel[7]=new Color(img.getRGB(i+1,j));                
                pixel[8]=new Color(img.getRGB(i+1,j+1));
-               */
+
+              /*
                pixel[0]=new Color(img.getRGB(i-1,j));
                pixel[1]=new Color(img.getRGB(i,j));
                pixel[2]=new Color(img.getRGB(i,j+1));
@@ -123,15 +128,16 @@ public class RTProject implements Runnable {
                pixel[7]=new Color(img.getRGB(i,j+1));
                pixel[8]=new Color(img.getRGB(i-1,j+1));
                
+               */
                
                
-               
-               
+
                for(int k=0;k<9;k++){
                    R[k]=pixel[k].getRed();
                    B[k]=pixel[k].getBlue();
                    G[k]=pixel[k].getGreen();
                }
+               
                Arrays.sort(R);
                Arrays.sort(G);
                Arrays.sort(B);
