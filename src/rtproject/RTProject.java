@@ -432,8 +432,7 @@ public class RTProject implements Runnable {
         for(int i = 0; i <bolme*bolme; i++){
             th[i] = new Thread(Array[i]);
         }
-        
-        
+         
         for(int i = 0; i < bolme*bolme; i++){
             th[i].start();
         }
@@ -444,12 +443,11 @@ public class RTProject implements Runnable {
             }
        
        }catch(Exception e){System.out.println(e);} 
-       Random rand = new Random(); 
-  
+        Random rand = new Random(); 
         // Generate random integers in range 0 to 999 
         int randintForImageName = rand.nextInt(1000); 
         int randintForImageName2 = rand.nextInt(1000);
-        String imgadres = "Exported-Images\\"+filtre+"-"+randintForImageName+randintForImageName2+".jpg";
+        String imgadres = "Exported-Images\\"+filtre+"\\"+filtre+"-"+randintForImageName+randintForImageName2+".jpg";
         try
         { 
             f = new File(imgadres);
@@ -458,77 +456,28 @@ public class RTProject implements Runnable {
         catch(IOException e) 
         { 
             System.out.println(e); 
-        }
-        
-        return imgadres;
-        
+        }   
+        return imgadres;  
   }
         
     public static void main(String[] args)throws IOException  {
         File file = new File("Exported-Images");
         file.mkdir();
+        File file2 = new File("Exported-Images\\brightness");
+        file2.mkdir();
+        File file3 = new File("Exported-Images\\invert");
+        file3.mkdir();
+        File file4 = new File("Exported-Images\\median");
+        file4.mkdir();
+        File file5 = new File("Exported-Images\\sepia");
+        file5.mkdir();
+        File file6 = new File("Exported-Images\\blur");
+        file6.mkdir();
+        File file7 = new File("Exported-Images\\gray");
+        file7.mkdir();
         RTPForm yeni = new RTPForm();
         yeni.show();
-        
-        /*
-        BufferedImage img = null; 
-        File f = null;
-        
-        try
-        { 
-            f = new File("src\\rtproject\\tayyib.png"); 
-            img = ImageIO.read(f);
         } 
-        catch(IOException e) 
-        { 
-            System.out.println(e); 
-        }*/
-        
-        
-        
-       
-        
-        /*
-        RTProject  median[]= new RTProject[9];
-       
-       int j=0;
-       for(int wi=0;wi<3;wi++){
-            for(int hi=0;hi<3;hi++,j++){
-                median[j] = new RTProject(img, (wi)*(w/3), hi*(h/3), "median");
-            }
-        }
-       
-        Thread th2[] = new Thread[9];
-        for(int i = 0; i <9; i++){
-        th2[i] = new Thread(median[i]);
-        }
-        
-        for(int i =0; i < 9; i++){
-        th2[i].start();
-        }
-        
-        try{ 
-            for(int i = 0; i < 9; i++){
-            th2[i].join();
-            }
-       
-       }catch(Exception e){System.out.println(e);} 
-        */
-        /*
-        try
-        { 
-            f = new File("src\\rtproject\\invert.jpg");
-            ImageIO.write(img, "jpg", f);
-        } 
-        catch(IOException e) 
-        { 
-            System.out.println(e); 
-        }
-        */
- 
-        }
-
-    
     }
     
 
