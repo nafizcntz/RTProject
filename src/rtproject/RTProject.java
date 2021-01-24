@@ -465,7 +465,6 @@ public class RTProject implements Runnable {
         RTPForm yeni = new RTPForm();
         yeni.show();
         
-        
         /*
         BufferedImage img = null; 
         File f = null;
