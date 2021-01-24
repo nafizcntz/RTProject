@@ -5,6 +5,7 @@ import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.Random;
 
 
 public class RTProject implements Runnable {
@@ -443,9 +444,12 @@ public class RTProject implements Runnable {
             }
        
        }catch(Exception e){System.out.println(e);} 
-        
-        
-        String imgadres = filtre+".jpg";
+       Random rand = new Random(); 
+  
+        // Generate random integers in range 0 to 999 
+        int randintForImageName = rand.nextInt(1000); 
+        int randintForImageName2 = rand.nextInt(1000);
+        String imgadres = "Exported-Images\\"+filtre+"-"+randintForImageName+randintForImageName2+".jpg";
         try
         { 
             f = new File(imgadres);
@@ -461,7 +465,8 @@ public class RTProject implements Runnable {
   }
         
     public static void main(String[] args)throws IOException  {
-        
+        File file = new File("Exported-Images");
+        file.mkdir();
         RTPForm yeni = new RTPForm();
         yeni.show();
         
