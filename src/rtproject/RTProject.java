@@ -487,6 +487,7 @@ public class RTProject implements Runnable {
     public static String reverseFilterController(String Adres, String filtre, int bolme){
       BufferedImage img = null; 
       File f = null;
+      BufferedImage outputImage=null;
       try
         { 
             f = new File(Adres); 
@@ -496,10 +497,10 @@ public class RTProject implements Runnable {
         { 
             System.out.println(e); 
         }
-        BufferedImage outputImage = new BufferedImage(img.getHeight(), img.getWidth(), img.getType());
-        int w = img.getWidth();
-        int h = img.getHeight(); 
-        RTProject Array[]= new RTProject[bolme*bolme];
+       outputImage = new BufferedImage(img.getHeight(), img.getWidth(), img.getType());
+       int w = img.getWidth();
+       int h = img.getHeight(); 
+       RTProject Array[]= new RTProject[bolme*bolme];
        int j=0;
        for(int wi=0;wi<bolme;wi++){
             for(int hi=0;hi<bolme;hi++,j++){
