@@ -10,51 +10,85 @@ import java.util.Random;
 
 public class RTProject implements Runnable {
     String switchh;
-    BufferedImage Img;
+    BufferedImage ImgI;
+    BufferedImage ImgO;
     int startWidth;
     int startHeight;
     String foto_yolu;
     int bolme;
     
     
-    public RTProject(BufferedImage img, int StartWidth, int StartHeight, String Switchh, int Bolme) {
+    public RTProject(BufferedImage imgI, int StartWidth, int StartHeight, String Switchh, int Bolme) {
         this.switchh = Switchh;
-        this.Img = img;
+        this.ImgI = imgI;
+        this.startWidth = StartWidth;
+        this.startHeight = StartHeight;
+        this.bolme = Bolme;
+    }
+    public RTProject(BufferedImage imgI, BufferedImage imgO, int StartWidth, int StartHeight, String Switchh, int Bolme) {
+        this.switchh = Switchh;
+        this.ImgI = imgI;
+        this.ImgO = imgO;
         this.startWidth = StartWidth;
         this.startHeight = StartHeight;
         this.bolme = Bolme;
     }
     public void run(){
         if (switchh == "gray"){
-            grayfonk(Img, startWidth, startHeight, bolme);
+            grayfonk(ImgI, startWidth, startHeight, bolme);
         }
         else if(switchh == "median"){
+            //applying the filter 5 times for a more noticable result
             for(int i=0; i<5; i++){
-            medianfonk(Img, startWidth, startHeight, bolme);
+            medianfonk(ImgI, startWidth, startHeight, bolme);
             }
         }
         else if(switchh == "brightness"){
-            brightnessfonk(Img, startWidth, startHeight, bolme);
+            brightnessfonk(ImgI, startWidth, startHeight, bolme);
         }
         else if(switchh == "blur"){
-            blurfonk(Img, startWidth, startHeight);
+            blurfonk(ImgI, startWidth, startHeight, bolme);
         }
         else if(switchh == "sepia"){
-            sepiafonk(Img, startWidth, startHeight, bolme);
+            sepiafonk(ImgI, startWidth, startHeight, bolme);
         }
         else if(switchh == "invert"){
-            invertfonk(Img, startWidth, startHeight, bolme);
+            invertfonk(ImgI, startWidth, startHeight, bolme);
+        }
+        else if(switchh == "reverse"){
+            reversefonk(ImgI,ImgO, startWidth, startHeight, bolme);
         }
     }
     
 
-    
-    public static synchronized void  grayfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
-        
-        // get image's width and height 
+    public static synchronized void  reversefonk(BufferedImage img,BufferedImage imgO, int StartWidth, int StartHeight, int bolme) {
         int width = img.getWidth()/bolme; 
         int height = img.getHeight()/bolme; 
+
+        for (int y = StartHeight; y < height+StartHeight; y++) 
+        { 
+            for (int x = StartWidth; x < width+StartWidth; x++) 
+            { 
+                // Here (x,y)denotes the coordinate of image  
+                // for modifying the pixel value. 
+                int p = img.getRGB(x,y); 
+                int a = (p>>24)&0xff; 
+                int r = (p>>16)&0xff; 
+                int g = (p>>8)&0xff; 
+                int b = p&0xff; 
   
+                int avg = (r+g+b)/3; 
+                p = (p & 0xff000000) | (r << 16) | (g << 8) | (b << 0);
+                
+                imgO.setRGB(y, x, p);
+            }
+        }
+    }
+    
+    public static synchronized void  grayfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
+        int width = img.getWidth()/bolme; 
+        int height = img.getHeight()/bolme; 
+     
         for (int y = StartHeight; y < height+StartHeight; y++) 
         { 
             for (int x = StartWidth; x < width+StartWidth; x++) 
@@ -74,8 +108,6 @@ public class RTProject implements Runnable {
                 p = (a<<24) | (avg<<16) | (avg<<8) | avg; 
   
                 img.setRGB(x, y, p);
- 
-                
             }
         }
     }
@@ -101,22 +133,7 @@ public class RTProject implements Runnable {
                p[6] = img.getRGB(i-1,j+1);
                p[7] = img.getRGB(i,j+1);
                p[8] = img.getRGB(i+1,j+1);
-            
-/*
-    for(int k=0; k<4; k++){
-	for(int z=0; z<4; z++){
-               p[k] = img.getRGB(i-1-k,j-1-z);
-               p[k+z] = img.getRGB(i-k,j-1-z);
-               p[k+z] = img.getRGB(i+1-k,j-1-z);
-               p[k+z] = img.getRGB(i-1-k,j-z);
-               p[k+z] = img.getRGB(i+k,j+z);
-               p[k+z] = img.getRGB(i+1+k,j+z);
-               p[k+z] = img.getRGB(i-1+k,j+1+z);
-               p[k+z] = img.getRGB(i+k,j+1+z);
-               p[k+z] = img.getRGB(i+1+k,j+1+z);
-        }
-    }
-*/                          
+                                    
                for(int x=0; x<9; x++){
                     int a = (p[x]>>24)&0xff; 
                     
@@ -253,14 +270,21 @@ public class RTProject implements Runnable {
   }
 }
 
-  public static void blurfonk(BufferedImage img, int StartWidth, int StartHeight){
-        /*
+  public static void blurfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme){
+        int width = img.getWidth()/bolme; 
+        int height = img.getHeight()/bolme; 
+
         int rgb_buffer[][][] = null;
-        rgb_buffer = new int[3][img.getHeight()*3][img.getWidth()*3];
-        
-        for (int i = 0; i<20;i++){
-        for(int row = 0; row < height*3; row++){
-            for(int col = 0; col < width*3; col++){
+        rgb_buffer = new int[3][height][width];
+
+        try{
+        for (int i = 0; i<20;i++){        
+            //for(int row = StartHeight; row < height*3+StartHeight; row++){
+            //for(int col = StartWidth; col < width*3+StartWidth; col++){
+            
+            
+        for(int row = StartHeight; row < height+StartHeight; row++){
+            for(int col = StartWidth; col < width+StartWidth; col++){
                 Color c = new Color(img.getRGB(col, row));
                 rgb_buffer[0][row][col] = c.getRed();
                 rgb_buffer[1][row][col] = c.getGreen();
@@ -268,8 +292,11 @@ public class RTProject implements Runnable {
             }
         }
         
-        for(int row = StartHeight; row < height+StartHeight; row++){
-            for(int col = StartWidth; col < width+StartWidth; col++){
+        
+        for(int row = StartHeight; row < height+StartHeight-2; row++){
+            for(int col = StartWidth; col < width+StartWidth-2; col++){
+       // for(int row = StartHeight; row < height+StartHeight; row++){
+        //    for(int col = StartWidth; col < width+StartWidth; col++){
                 int r = 0;
                 int g = 0;
                 int b = 0;
@@ -316,10 +343,11 @@ public class RTProject implements Runnable {
                 img.setRGB(col, row, c.getRGB());
             }
         }
-        
-     }      
-    */
+        }
+     }catch(Exception e){}   
+    
   }
+  
   
   
   public static void sepiafonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
@@ -374,8 +402,6 @@ public class RTProject implements Runnable {
         {
             for (int j = StartWidth; j < w+StartWidth; j++)
             {
-                
-                
                int p = img.getRGB(j,i); 
                int a = (p>>24)&0xff; 
 
@@ -389,8 +415,6 @@ public class RTProject implements Runnable {
               g = 255 - g;
               b = 255 - b;
 
-              
-
               // Return the result
               p = (p & 0xff000000) | (r << 16) | (g << 8) | (b << 0);
               img.setRGB(j, i, p); 
@@ -399,24 +423,22 @@ public class RTProject implements Runnable {
         }
   }
   
-  public static String Filtre(String Adres, String filtre, int bolme){
+  public static String Controller(String Adres, String filtre, int bolme){
+      
       BufferedImage img = null; 
       File f = null;
-      
+
       try
         { 
             f = new File(Adres); 
-            img = ImageIO.read(f);
-            
+            img = ImageIO.read(f);   
         } 
         catch(IOException e) 
         { 
             System.out.println(e); 
         }
-        
         int w = img.getWidth();
         int h = img.getHeight();
-        
         RTProject Array[]= new RTProject[bolme*bolme];
        
        int j=0;
@@ -426,8 +448,7 @@ public class RTProject implements Runnable {
                 
             }
         }
-        
-       
+
        Thread th[] = new Thread[bolme*bolme];
         for(int i = 0; i <bolme*bolme; i++){
             th[i] = new Thread(Array[i]);
@@ -459,7 +480,64 @@ public class RTProject implements Runnable {
         }   
         return imgadres;  
   }
+  
+  //        Created a special controller function for the reverse filter because 
+  //        it needs an output buffered image not only input like the other filters.
+  
+    public static String reverseFilterController(String Adres, String filtre, int bolme){
+      BufferedImage img = null; 
+      File f = null;
+      try
+        { 
+            f = new File(Adres); 
+            img = ImageIO.read(f);   
+        } 
+        catch(IOException e) 
+        { 
+            System.out.println(e); 
+        }
+        BufferedImage outputImage = new BufferedImage(img.getHeight(), img.getWidth(), img.getType());
+        int w = img.getWidth();
+        int h = img.getHeight(); 
+        RTProject Array[]= new RTProject[bolme*bolme];
+       int j=0;
+       for(int wi=0;wi<bolme;wi++){
+            for(int hi=0;hi<bolme;hi++,j++){
+                Array[j] = new RTProject(img,outputImage, (wi)*(w/bolme), hi*(h/bolme), filtre, bolme);
+                
+            }
+        }
+
+       Thread th[] = new Thread[bolme*bolme];
+        for(int i = 0; i <bolme*bolme; i++){
+            th[i] = new Thread(Array[i]);
+        }
+         
+        for(int i = 0; i < bolme*bolme; i++){
+            th[i].start();
+        }
         
+        try{ 
+            for(int i = 0; i < bolme*bolme; i++){
+            th[i].join();
+            }
+       }catch(Exception e){System.out.println(e);} 
+        Random rand = new Random(); 
+        // Generate random integers in range 0 to 999 
+        int randintForImageName = rand.nextInt(1000); 
+        int randintForImageName2 = rand.nextInt(1000);
+        String imgadres = "Exported-Images\\"+filtre+"\\"+filtre+"-"+randintForImageName+randintForImageName2+".jpg";
+        try
+        { 
+            f = new File(imgadres);
+            ImageIO.write(outputImage, "jpg", f); 
+        } 
+        catch(IOException e) 
+        { 
+            System.out.println(e); 
+        }
+         return imgadres;   
+    }
     public static void main(String[] args)throws IOException  {
         File file = new File("Exported-Images");
         file.mkdir();
@@ -475,9 +553,11 @@ public class RTProject implements Runnable {
         file6.mkdir();
         File file7 = new File("Exported-Images\\gray");
         file7.mkdir();
+        File file8 = new File("Exported-Images\\reverse");
+        file8.mkdir();
         RTPForm yeni = new RTPForm();
-        yeni.show();
-        } 
-    }
+        yeni.show(); 
+    }        
+}
     
 
