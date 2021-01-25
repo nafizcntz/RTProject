@@ -7,6 +7,14 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Random;
 
+/*
+Image Processing with Real Time Programming
+
+Muhammed Nafiz Canıtez 030117068
+Erdem Demir 030118060
+Mohammed Elazab 030117126
+*/
+
 public class RTProject implements Runnable {
     String switchh;
     BufferedImage ImgI;
@@ -280,25 +288,26 @@ public class RTProject implements Runnable {
                                     
                 for(int x=0; x<9; x++){
                     int a = (p[x]>>24)&0xff; 
-                    
-                   // Get the individual colors
+
+                    // Get the individual colors
                     r = (p[x] >> 16) & 0xff;
                     g = (p[x] >> 8) & 0xff;
                     b = p[x]&0xff;
-                   // Check the boundaries
-                   r = Math.min(Math.max(0, r), 255);
-                   g = Math.min(Math.max(0, g), 255);
-                   b = Math.min(Math.max(0, b), 255);
-                   // Return the result
-                p[x] = (a<<24) | (r<<16) | (g<<8) | b;
+                    // Check the boundaries
+                    r = Math.min(Math.max(0, r), 255);
+                    g = Math.min(Math.max(0, g), 255);
+                    b = Math.min(Math.max(0, b), 255);
+                    // Return the result
+                    p[x] = (a<<24) | (r<<16) | (g<<8) | b;
                 }
+                
                 Arrays.sort(p);
                 img.setRGB(i,j, p[4]); 
             
         }
         //  Calling a function to apply the filter vertically and horizontally
         //  on the surrounding parts of every square.
-       //     medianfonkKenar(img,StartWidth, StartHeight, bolme);
+            medianfonkKenar(img,StartWidth, StartHeight, bolme);
        }
 
     public static synchronized void medianfonkKenar(BufferedImage img, int StartWidth, int StartHeight,int bolme) {

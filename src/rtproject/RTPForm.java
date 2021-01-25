@@ -22,10 +22,13 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-/**
- *
- * @author Nafiz
- */
+/*
+Image Processing with Real Time Programming
+
+Muhammed Nafiz Canıtez 030117068
+Erdem Demir 030118060
+Mohammed Elazab 030117126
+*/
 public class RTPForm extends javax.swing.JFrame {
     JLabel image;
     String imgadres1;
