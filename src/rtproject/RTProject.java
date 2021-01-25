@@ -16,8 +16,7 @@ public class RTProject implements Runnable {
     int startHeight;
     String foto_yolu;
     int bolme;
-    
-    
+ 
     public RTProject(BufferedImage imgI, int StartWidth, int StartHeight, String Switchh, int Bolme) {
         this.switchh = Switchh;
         this.ImgI = imgI;
@@ -123,7 +122,6 @@ public class RTProject implements Runnable {
         for(int i = StartWidth+1; i < width+StartWidth-1; i++)
             for(int j = StartHeight+1; j < height+StartHeight-1; j++)
             {
-
                p[0] = img.getRGB(i-1,j-1);
                p[1] = img.getRGB(i,j-1);
                p[2] = img.getRGB(i+1,j-1);
@@ -152,7 +150,8 @@ public class RTProject implements Runnable {
                 img.setRGB(i,j, p[4]); 
             
         }
-        //  Calling a function to apply the filter vertically and horizontally on the surrounding parts of every small filter
+        //  Calling a function to apply the filter vertically and horizontally
+        //  on the surrounding parts of every square.
               medianfonkKenar(img,StartWidth, StartHeight, bolme);
        }
 
@@ -230,8 +229,7 @@ public class RTProject implements Runnable {
                 img.setRGB(i,j, p[4]); 
                 }
         
-    }catch(Exception e){
-    }
+    }catch(Exception e){}
 }
   
   
@@ -276,13 +274,8 @@ public class RTProject implements Runnable {
 
         int rgb_buffer[][][] = null;
         rgb_buffer = new int[3][height][width];
-
         try{
         for (int i = 0; i<20;i++){        
-            //for(int row = StartHeight; row < height*3+StartHeight; row++){
-            //for(int col = StartWidth; col < width*3+StartWidth; col++){
-            
-            
         for(int row = StartHeight; row < height+StartHeight; row++){
             for(int col = StartWidth; col < width+StartWidth; col++){
                 Color c = new Color(img.getRGB(col, row));
@@ -295,13 +288,10 @@ public class RTProject implements Runnable {
         
         for(int row = StartHeight; row < height+StartHeight-2; row++){
             for(int col = StartWidth; col < width+StartWidth-2; col++){
-       // for(int row = StartHeight; row < height+StartHeight; row++){
-        //    for(int col = StartWidth; col < width+StartWidth; col++){
                 int r = 0;
                 int g = 0;
                 int b = 0;
-                
-                //İlk girişte outofbonds hatası alıyoruz. Onu çözemedik
+
                  r = rgb_buffer[0][row][col]+
                         rgb_buffer[0][row][col+1]+
                         rgb_buffer[0][row][col+2]+
@@ -337,15 +327,13 @@ public class RTProject implements Runnable {
                         rgb_buffer[2][row+2][col]+
                         rgb_buffer[2][row+2][col+1]+
                         rgb_buffer[2][row+2][col+2];
-                
-                
+
                 Color c = new Color(r/9, g/9, b/9);
                 img.setRGB(col, row, c.getRGB());
             }
         }
         }
      }catch(Exception e){}   
-    
   }
   
   
@@ -353,7 +341,6 @@ public class RTProject implements Runnable {
   public static void sepiafonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
       int w = img.getWidth()/bolme;
       int h = img.getHeight()/bolme;
-        
         
         for (int row = StartWidth; row <w+StartWidth; row++) {
             for (int col = StartHeight; col < h+StartHeight; col++) {
@@ -393,8 +380,7 @@ public class RTProject implements Runnable {
             }
         }
   }
-  public static void invertfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) {
-       
+  public static void invertfonk(BufferedImage img, int StartWidth, int StartHeight, int bolme) { 
       int w = img.getWidth()/bolme;
       int h = img.getHeight()/bolme;
       
@@ -417,17 +403,14 @@ public class RTProject implements Runnable {
 
               // Return the result
               p = (p & 0xff000000) | (r << 16) | (g << 8) | (b << 0);
-              img.setRGB(j, i, p); 
-                
+              img.setRGB(j, i, p);    
             }
         }
   }
   
   public static String Controller(String Adres, String filtre, int bolme){
-      
       BufferedImage img = null; 
       File f = null;
-
       try
         { 
             f = new File(Adres); 
@@ -439,13 +422,13 @@ public class RTProject implements Runnable {
         }
         int w = img.getWidth();
         int h = img.getHeight();
+        
         RTProject Array[]= new RTProject[bolme*bolme];
        
        int j=0;
        for(int wi=0;wi<bolme;wi++){
             for(int hi=0;hi<bolme;hi++,j++){
-                Array[j] = new RTProject(img, (wi)*(w/bolme), hi*(h/bolme), filtre, bolme);
-                
+                Array[j] = new RTProject(img, (wi)*(w/bolme), hi*(h/bolme), filtre, bolme);   
             }
         }
 
@@ -482,12 +465,12 @@ public class RTProject implements Runnable {
   }
   
   //        Created a special controller function for the reverse filter because 
-  //        it needs an output buffered image not only input like the other filters.
+  //        it needs an output buffered image not only input like the other filters 
+  //        since the image's dimensions change.
   
     public static String reverseFilterController(String Adres, String filtre, int bolme){
       BufferedImage img = null; 
       File f = null;
-      BufferedImage outputImage=null;
       try
         { 
             f = new File(Adres); 
@@ -497,15 +480,15 @@ public class RTProject implements Runnable {
         { 
             System.out.println(e); 
         }
-       outputImage = new BufferedImage(img.getHeight(), img.getWidth(), img.getType());
+      //        Swappin height with width
+       BufferedImage outputImage = new BufferedImage(img.getHeight(), img.getWidth(), img.getType());
        int w = img.getWidth();
        int h = img.getHeight(); 
        RTProject Array[]= new RTProject[bolme*bolme];
        int j=0;
        for(int wi=0;wi<bolme;wi++){
             for(int hi=0;hi<bolme;hi++,j++){
-                Array[j] = new RTProject(img,outputImage, (wi)*(w/bolme), hi*(h/bolme), filtre, bolme);
-                
+                Array[j] = new RTProject(img,outputImage, (wi)*(w/bolme), hi*(h/bolme), filtre, bolme);  
             }
         }
 

@@ -210,7 +210,6 @@ public class RTPForm extends javax.swing.JFrame {
             File file = Chooser.getSelectedFile();
             imgadres1 = file.getAbsolutePath();
             BufferedImage resim = null;
-            //resim = new ImageIcon(file.getAbsolutePath());
             try {
                 resim = ImageIO.read(new File(file.getAbsolutePath()));
             } catch (IOException e) {
@@ -219,20 +218,14 @@ public class RTPForm extends javax.swing.JFrame {
             Image dimg = resim.getScaledInstance(jLabel2.getWidth(), jLabel2.getHeight(), Image.SCALE_SMOOTH);
             ImageIcon imageIcon = new ImageIcon(dimg);
             jLabel2.setIcon(imageIcon);
-            jProgressBar1.setValue(25);
-            
-        }
-        
-        
-        
-        
+            jProgressBar1.setValue(25);   
+        }    
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
         if(imgadres1!=null){
         jProgressBar1.setValue(25);
-
         }
          if(jComboBox1.getSelectedItem().toString()=="median"){
          MessageLabel.setText("\nIt might take a couple of\nseconds for Median filter\nto work, just hang in there!");
@@ -252,19 +245,18 @@ public class RTPForm extends javax.swing.JFrame {
         }else{
         BufferedImage resim = null;
         Image dimg =null;
-            //resim = new ImageIcon(file.getAbsolutePath());
             try {
                 jProgressBar1.setValue(50);
-              if(jComboBox1.getSelectedItem().toString()=="reverse"){
-                resim = ImageIO.read(new File(RTProject.reverseFilterController(imgadres1, jComboBox1.getSelectedItem().toString(), Integer.parseInt(jComboBox2.getSelectedItem().toString()))));
+                if(jComboBox1.getSelectedItem().toString()=="reverse"){
+                    resim = ImageIO.read(new File(RTProject.reverseFilterController(imgadres1, jComboBox1.getSelectedItem().toString(), Integer.parseInt(jComboBox2.getSelectedItem().toString()))));
                 }else{
-                resim = ImageIO.read(new File(RTProject.Controller(imgadres1, jComboBox1.getSelectedItem().toString(), Integer.parseInt(jComboBox2.getSelectedItem().toString()))));
+                    resim = ImageIO.read(new File(RTProject.Controller(imgadres1, jComboBox1.getSelectedItem().toString(), Integer.parseInt(jComboBox2.getSelectedItem().toString()))));
                 }
                 jProgressBar1.setValue(75);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-             dimg = resim.getScaledInstance(jLabel3.getWidth(), jLabel3.getHeight(), Image.SCALE_SMOOTH);
+            dimg = resim.getScaledInstance(jLabel3.getWidth(), jLabel3.getHeight(), Image.SCALE_SMOOTH);
             jProgressBar1.setValue(95);
             ImageIcon imageIcon = new ImageIcon(dimg);
             jLabel3.setIcon(imageIcon);
@@ -278,8 +270,7 @@ public class RTPForm extends javax.swing.JFrame {
             MessageLabel.setText("\nYou must select an image first!!!");
         }else{
             jProgressBar1.setValue(25);
-        }
-        
+        }  
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     
