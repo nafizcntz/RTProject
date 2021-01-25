@@ -14,7 +14,6 @@ public class RTProject implements Runnable {
     BufferedImage ImgO;
     int startWidth;
     int startHeight;
-    String foto_yolu;
     int bolme;
  
     public RTProject(BufferedImage imgI, int StartWidth, int StartHeight, String Switchh, int Bolme) {
